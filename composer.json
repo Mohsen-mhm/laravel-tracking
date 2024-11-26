@@ -1,0 +1,30 @@
+{
+    "name": "mohsen-mhm/laravel-tracking",
+    "description": "A tracking package for Laravel applications",
+    "version": "1.0.0",
+    "type": "library",
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^11.34",
+        "illuminate/database": "^11.34"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MohsenMhm\\LaravelTracking\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MohsenMhm\\Tracking\\Providers\\TrackingServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "MOHSEN",
+            "email": "mohsen.mhm23@gmail.com"
+        }
+    ]
+}
