@@ -4,23 +4,28 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTrackingLogsTable extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('tracking_logs', function (Blueprint $table) {
+        Schema::create('request_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('url');
             $table->string('method');
-            $table->json('request_data')->nullable();
-            $table->json('response_data')->nullable();
+            $table->string('url');
+            $table->text('headers')->nullable();
+            $table->text('body')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('ip_address')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->integer('response_status')->nullable();
+            $table->text('response_content')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('tracking_logs');
+        Schema::dropIfExists('request_logs');
     }
-}
+};

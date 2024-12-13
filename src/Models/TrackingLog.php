@@ -3,14 +3,27 @@
 namespace MohsenMhm\LaravelTracking\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TrackingLog extends Model
 {
+    protected $table = 'request_logs';
+
     protected $fillable = [
-        'user_id',
-        'url',
         'method',
-        'request_data',
-        'response_data',
+        'url',
+        'headers',
+        'body',
+        'user_id',
+        'ip_address',
+        'user_agent',
+        'response_status',
+        'response_content'
     ];
+
+    public function user(): ?BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
