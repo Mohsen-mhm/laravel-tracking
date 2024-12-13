@@ -21,14 +21,14 @@ class TrackingServiceProvider extends ServiceProvider
         // Publish config
         $this->publishes([
             __DIR__ . '/../../config/tracking.php' => config_path('tracking.php'),
-        ], 'config');
+        ], 'tracker-configs');
 
         $this->publishes([
             __DIR__.'/../../resources/views' => resource_path('views/vendor/request-tracker'),
-        ], 'views');
+        ], 'tracker-views');
 
         $this->publishes([
-            __DIR__.'/../../resources/assets' => public_path('vendor/request-tracker'),
-        ], 'assets');
+            __DIR__.'/../../database/migrations/' => database_path('migrations'),
+        ], 'tracker-migrations');
     }
 }

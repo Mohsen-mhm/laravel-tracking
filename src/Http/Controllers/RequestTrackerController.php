@@ -3,6 +3,7 @@
 namespace MohsenMhm\LaravelTracking\Http\Controllers;
 
 use MohsenMhm\LaravelTracking\Models\TrackingLog;
+use App\Http\Controllers\Controller;
 
 class RequestTrackerController extends Controller
 {
