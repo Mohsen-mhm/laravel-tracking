@@ -4,51 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request Logs</title>
-    @if(config('tracking.theme') === 'bootstrap')
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    @elseif(config('tracking.theme') === 'tailwind')
-        <script src="https://cdn.tailwindcss.com"></script>
-    @endif
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media'
+        };
+    </script>
 </head>
-<body class="@if(config('tracking.theme') === 'tailwind') bg-gray-100 @endif">
-<div class="container mt-5">
-    <h1 class="text-center mb-4 @if(config('tracking.theme') === 'bootstrap') text-primary @elseif(config('tracking.theme') === 'tailwind') text-blue-500 @endif">Request Logs</h1>
-    <table class="@if(config('tracking.theme') === 'bootstrap') table table-striped table-bordered @elseif(config('tracking.theme') === 'tailwind') min-w-full bg-white divide-y divide-gray-200 @endif">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Method</th>
-            <th>URL</th>
-            <th>IP Address</th>
-            <th>User Agent</th>
-            <th>Status</th>
-            <th>Headers</th>
-            <th>Body</th>
-            <th>Response Content</th>
-            <th>Timestamp</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($logs as $log)
-            <tr>
-                <td>{{ $log->id }}</td>
-                <td>{{ $log->user ? $log->user->name : 'Guest' }}</td>
-                <td>{{ $log->method }}</td>
-                <td>{{ $log->url }}</td>
-                <td>{{ $log->ip_address }}</td>
-                <td>{{ $log->user_agent }}</td>
-                <td>{{ $log->response_status }}</td>
-                <td>{{ $log->headers }}</td>
-                <td>{{ $log->body }}</td>
-                <td>{{ $log->response_content }}</td>
-                <td>{{ $log->created_at }}</td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="@if(config('tracking.theme') === 'bootstrap') d-flex justify-content-center @elseif(config('tracking.theme') === 'tailwind') flex justify-center @endif">
-        {{ $logs->links() }}
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-200">
+<div class="max-w-7xl mx-auto mt-10 px-4">
+    <h1 class="text-blue-500 text-3xl mb-8 font-semibold text-center dark:text-blue-300">Request Logs</h1>
+    <div class="bg-white shadow-md rounded-lg p-6 dark:bg-gray-800">
+
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">User</th>
+                    <th scope="col" class="px-6 py-3">Method</th>
+                    <th scope="col" class="px-6 py-3">URL</th>
+                    <th scope="col" class="px-6 py-3">IP Address</th>
+                    <th scope="col" class="px-6 py-3">User Agent</th>
+                    <th scope="col" class="px-6 py-3">Status</th>
+                    <th scope="col" class="px-6 py-3">Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($logs as $log)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $log->id }}</th>
+                        <td class="px-6 py-4">{{ $log->user ? getUserTitle($log->user) : 'Guest' }}</td>
+                        <td class="px-6 py-4">{{ $log->method }}</td>
+                        <td class="px-6 py-4">{{ $log->url }}</td>
+                        <td class="px-6 py-4">{{ $log->ip_address }}</td>
+                        <td class="px-6 py-4">{{ $log->user_agent }}</td>
+                        <td class="px-6 py-4">{{ $log->response_status }}</td>
+                        <td class="px-6 py-4">{{ $log->created_at }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="flex flex-col justify-center mt-6">
+            {{ $logs->links() }}
+        </div>
     </div>
 </div>
 </body>

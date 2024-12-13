@@ -1,7 +1,7 @@
 {
     "name": "mohsen-mhm/laravel-tracking",
     "description": "A tracking package for Laravel applications",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "type": "library",
     "require": {
         "php": "^8.0",
@@ -12,7 +12,10 @@
     "autoload": {
         "psr-4": {
             "MohsenMhm\\LaravelTracking\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {
