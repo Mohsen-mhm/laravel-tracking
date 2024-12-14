@@ -36,17 +36,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Log Response Content
-    |--------------------------------------------------------------------------
-    |
-    | Specify whether the content of responses should be logged. This can be
-    | useful for debugging purposes but may increase storage usage.
-    |
-    */
-    'log_response' => true,
-
-    /*
-    |--------------------------------------------------------------------------
     | Log IP Address
     |--------------------------------------------------------------------------
     |

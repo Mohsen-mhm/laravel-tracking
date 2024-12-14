@@ -19,7 +19,6 @@ class TrackingLog extends Model
         'ip_address',
         'user_agent',
         'response_status',
-        'response_content'
     ];
 
     public function user(): ?BelongsTo

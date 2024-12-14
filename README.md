@@ -11,7 +11,7 @@ customization.
 - Logs user details, headers, body, and response.
 - Tracks IP address and User-Agent.
 - Configurable logging options.
-- Supports Bootstrap and Tailwind CSS themes for the log viewer.
+- Supports Bootstrap and Tailwind CSS themes for the log viewer. (soon)
 - Route URL customization.
 - Migration publishing for database setup.
 
@@ -44,27 +44,13 @@ customization.
 
 ## Configuration
 
-The configuration file (`config/requesttracker.php`) allows you to control the package's behavior:
-
-```php
-return [
-    'log_user' => true, // Log user details
-    'log_headers' => true, // Log headers
-    'log_body' => true, // Log body
-    'log_response' => true, // Log response content
-    'log_ip' => true, // Log IP address
-    'log_user_agent' => true, // Log User-Agent
-    'theme' => 'bootstrap', // Options: bootstrap, tailwind
-    'logging_enabled' => true, // Enable or disable logging
-    'route_url' => 'request-logs', // Customizable route URL
-];
-```
+The configuration file (`config/tracking.php`) allows you to control the package's behavior:
 
 ## Usage
 
 ### Middleware
 
-The `LogRequests` middleware handles request logging. You can add it to your middleware stack:
+The `TrackRequests` middleware handles request logging. You can add it to your middleware stack:
 
 ```php
 protected $middleware = [
@@ -79,10 +65,6 @@ Visit the route defined in the configuration (`route_url`) to view the logs. For
 ```
 http://your-app.test/request-logs
 ```
-
-## Theming
-
-You can select either `bootstrap` or `tailwind` in the configuration file. The views will adapt accordingly.
 
 ## Publishing Migrations
 

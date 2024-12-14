@@ -35,10 +35,6 @@ class TrackRequests
             $logData['body'] = json_encode($request->all());
         }
 
-        if (config('tracking.log_response')) {
-            $logData['response_content'] = $response->getContent();
-        }
-
         TrackingLog::query()->create($logData);
 
         return $response;
