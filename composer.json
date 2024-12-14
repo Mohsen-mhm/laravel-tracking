@@ -5,8 +5,8 @@
     "type": "library",
     "require": {
         "php": "^8.0",
-        "illuminate/support": "^10.0 || ^11.0",
-        "illuminate/database": "^10.0 || ^11.0"
+        "illuminate/support": "^9.0 || ^10.0 || ^11.0",
+        "illuminate/database": "^9.0 || ^10.0 || ^11.0"
     },
     "license": "MIT",
     "autoload": {
@@ -24,10 +24,8 @@
             ]
         }
     },
-    "authors": [
-        {
-            "name": "MOHSEN",
-            "email": "mohsen.mhm23@gmail.com"
-        }
-    ]
+    "authors": [{
+        "name": "MOHSEN",
+        "email": "mohsen.mhm23@gmail.com"
+    }]
 }
