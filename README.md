@@ -15,6 +15,26 @@ customization.
 - Route URL customization.
 - Migration publishing for database setup.
 
+---
+
+## Compatibility
+
+### Laravel Version Support
+
+> **This package supports Laravel 9, 10, and 11.**
+
+We ensure compatibility with the latest Laravel versions while maintaining support for older versions starting from Laravel 9. 
+
+To install the package in your Laravel project, make sure you have `PHP 8.0` or above and run:
+
+```bash
+composer require mohsen-mhm/laravel-tracking
+```
+
+For Laravel 9, the package ensures compatibility by leveraging `doctrine/dbal` version `^3.x`. For Laravel 10 and 11, the package uses `doctrine/dbal` version `^4.x`. These are dynamically managed based on your Laravel version.
+
+---
+
 ## Installation
 
 1. Install the package via Composer:
