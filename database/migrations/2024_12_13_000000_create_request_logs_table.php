@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('request_logs', function (Blueprint $table) {
             $table->id();
             $table->string('method');
-            $table->string('url');
+            $table->text('url');
             $table->text('headers')->nullable();
             $table->text('body')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
