@@ -12,11 +12,9 @@
     </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-200">
-<div class="max-w-7xl mx-auto mt-10 px-4">
-    <h1 class="text-blue-500 text-3xl mb-8 font-semibold text-center dark:text-blue-300">Request Logs</h1>
+<div class="mx-auto my-10 px-4">
+    <h1 class="text-blue-500 text-3xl mb-8 font-semibold text-center dark:text-blue-400">Request Logs</h1>
     <div class="bg-white shadow-md rounded-lg p-6 dark:bg-gray-800">
-
-
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
