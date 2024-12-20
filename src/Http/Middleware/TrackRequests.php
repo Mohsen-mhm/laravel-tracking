@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use MohsenMhm\LaravelTracking\Models\TrackingLog;
 use MohsenMhm\LaravelTracking\Services\IpResolverService;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TrackRequests
 {
@@ -24,6 +26,14 @@ class TrackRequests
 
         $response = $next($request);
 
+        // Get response status based on response type
+        $status = match(true) {
+            $response instanceof StreamedResponse => 200, // Downloads usually mean success
+            $response instanceof BinaryFileResponse => 200, // File responses usually mean success
+            method_exists($response, 'status') => $response->status(),
+            default => 200
+        };
+
         // Collect data based on configuration
         $logData = [
             'method' => $request->method(),
@@ -31,7 +41,7 @@ class TrackRequests
             'user_id' => config('tracking.log_user') ? Auth::id() : null,
             'ip_address' => config('tracking.log_ip') ? $this->ipResolver->resolveIp($request) : null,
             'user_agent' => config('tracking.log_user_agent') ? $request->header('User-Agent') : null,
-            'response_status' => $response->status(),
+            'response_status' => $status,
         ];
 
         if (config('tracking.log_headers')) {
