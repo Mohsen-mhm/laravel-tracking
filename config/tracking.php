@@ -104,4 +104,15 @@ return [
     |
     */
     'permission' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom IP Resolution
+    |--------------------------------------------------------------------------
+    |
+    | Define a custom callback to resolve the user's IP address.
+    | Set to null to use the default IP resolution.
+    |
+    */
+    'ip_resolver' => null,
 ];

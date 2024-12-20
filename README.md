@@ -107,6 +107,15 @@ Access the logs at:
 ```
 http://your-app.test/custom-log-url
 ```
+## Custom IP Resolution
+
+You can define your own IP resolution logic by setting a callback in your `config/tracking.php`:
+
+```php
+'ip_resolver' => function (Request $request) {
+    return $request->header('X-Forwarded-For') ?? $request->ip();
+},
+```
 
 ## License
 
