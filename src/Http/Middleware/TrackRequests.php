@@ -26,6 +26,14 @@ class TrackRequests
 
         $response = $next($request);
 
+        // Check if the current IP is blacklisted
+        $currentIp = $this->ipResolver->resolveIp($request);
+        $blacklistedIps = config('tracking.ip_blacklist', []);
+        
+        if (in_array($currentIp, $blacklistedIps)) {
+            return $response;
+        }
+
         // Get response status based on response type
         $status = match(true) {
             $response instanceof StreamedResponse => 200, // Downloads usually mean success
@@ -39,7 +47,7 @@ class TrackRequests
             'method' => $request->method(),
             'url' => $request->fullUrl(),
             'user_id' => config('tracking.log_user') ? Auth::id() : null,
-            'ip_address' => config('tracking.log_ip') ? $this->ipResolver->resolveIp($request) : null,
+            'ip_address' => config('tracking.log_ip') ? $currentIp : null,
             'user_agent' => config('tracking.log_user_agent') ? $request->header('User-Agent') : null,
             'response_status' => $status,
         ];
