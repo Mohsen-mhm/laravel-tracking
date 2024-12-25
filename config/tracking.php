@@ -115,4 +115,18 @@ return [
     |
     */
     'ip_resolver' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | IP Blacklist
+    |--------------------------------------------------------------------------
+    |
+    | List of IP addresses that should be excluded from logging.
+    | Requests from these IPs will not be logged.
+    |
+    */
+    'ip_blacklist' => [
+        // '127.0.0.1',
+        // '192.168.1.1',
+    ],
 ];
