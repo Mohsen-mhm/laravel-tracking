@@ -30,5 +30,13 @@ class TrackingServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../database/migrations/' => database_path('migrations'),
         ], 'tracker-migrations');
+
+        // Serve package assets
+        $this->publishes([
+            __DIR__.'/../../public/assets' => public_path('vendor/request-tracker/assets'),
+        ], 'tracker-assets');
+    
+        // Register package assets path for direct access
+        $this->loadViewsFrom(__DIR__.'/../../public', 'request-tracker');
     }
 }

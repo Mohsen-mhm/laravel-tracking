@@ -48,3 +48,22 @@ if (!function_exists('getUserTitle')) {
         return null;
     }
 }
+
+if (!function_exists('request_logs_asset')) {
+    /**
+     * Generate an asset path for the package.
+     *
+     * @param string $path
+     * @return string
+     */
+    function request_logs_asset($path)
+    {
+        // Check if the asset has been published
+        if (file_exists(public_path('vendor/request-tracker/' . $path))) {
+            return asset('vendor/request-tracker/' . $path);
+        }
+
+        // Fallback to package assets
+        return "https://cdn.tailwindcss.com";
+    }
+}

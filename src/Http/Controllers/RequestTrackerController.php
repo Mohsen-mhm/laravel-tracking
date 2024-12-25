@@ -10,20 +10,58 @@ class RequestTrackerController extends Controller
 {
     public function index(Request $request)
     {
-        $query = TrackingLog::query();
+        $query = RequestLog::query();
 
-        // Search functionality
-        if ($search = strtolower($request->input('search'))) {
+        // Basic search
+        if ($request->filled('search')) {
+            $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->whereRaw('LOWER(url) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(method) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(ip_address) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(user_agent) LIKE ?', ["%{$search}%"]);
+                $q->where('url', 'like', "%{$search}%")
+                ->orWhere('ip_address', 'like', "%{$search}%")
+                ->orWhere('user_agent', 'like', "%{$search}%");
             });
         }
 
-        $logs = $query->with('user')->latest()->paginate(15);
-        return view('request-tracker::index', compact('logs'));
+        // Method filter
+        if ($request->filled('method')) {
+            $query->where('method', $request->method);
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('response_status', $request->status);
+        }
+
+        // Date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // IP filter
+        if ($request->filled('ip')) {
+            $query->where('ip_address', 'like', "%{$request->ip}%");
+        }
+
+        // User filter
+        if ($request->filled('user')) {
+            $query->where(function($q) use ($request) {
+                $q->whereHas('user', function($subQ) use ($request) {
+                    $subQ->where('name', 'like', "%{$request->user}%")
+                         ->orWhere('email', 'like', "%{$request->user}%");
+                })
+                ->orWhereNull('user_id') // Include guests if search term is "guest" or "Guest"
+                ->when(strtolower($request->user) === 'guest', function($subQ) {
+                    $subQ->orWhereNull('user_id');
+                });
+            });
+        }
+
+        $logs = $query->latest()->paginate(15)->withQueryString();
+
+        return view('request-logs::index', compact('logs'));
     }
 
     public function destroy(TrackingLog $log)
