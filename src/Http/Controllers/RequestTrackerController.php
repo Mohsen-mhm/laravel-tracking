@@ -5,6 +5,7 @@ namespace MohsenMhm\LaravelTracking\Http\Controllers;
 use Illuminate\Http\Request;
 use MohsenMhm\LaravelTracking\Models\TrackingLog;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Schema;
 
 class RequestTrackerController extends Controller
 {
@@ -47,15 +48,29 @@ class RequestTrackerController extends Controller
 
         // User filter
         if ($request->filled('user')) {
-            $query->where(function($q) use ($request) {
-                $q->whereHas('user', function($subQ) use ($request) {
-                    $subQ->where('name', 'like', "%{$request->user}%")
-                         ->orWhere('email', 'like', "%{$request->user}%");
-                })
-                ->orWhereNull('user_id') // Include guests if search term is "guest" or "Guest"
-                ->when(strtolower($request->user) === 'guest', function($subQ) {
-                    $subQ->orWhereNull('user_id');
-                });
+            $searchTerm = strtolower($request->user);
+            
+            $query->where(function($q) use ($searchTerm) {
+                if ($searchTerm === 'guest') {
+                    $q->whereNull('user_id');
+                } else {
+                    $q->whereHas('user', function($subQ) use ($searchTerm) {
+                        // Get all searchable columns from users table
+                        $columns = Schema::getColumnListing('users');
+                        
+                        $subQ->where(function($innerQ) use ($columns, $searchTerm) {
+                            foreach ($columns as $column) {
+                                // Skip non-searchable columns
+                                if (in_array($column, ['password', 'remember_token', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at'])) {
+                                    continue;
+                                }
+                                
+                                // Cast column to string for searching
+                                $innerQ->orWhereRaw("LOWER(CAST({$column} AS TEXT)) LIKE ?", ["%{$searchTerm}%"]);
+                            }
+                        });
+                    });
+                }
             });
         }
 
