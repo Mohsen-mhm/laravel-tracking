@@ -10,7 +10,7 @@ class RequestTrackerController extends Controller
 {
     public function index(Request $request)
     {
-        $query = RequestLog::query();
+        $query = TrackingLog::query();
 
         // Basic search
         if ($request->filled('search')) {
