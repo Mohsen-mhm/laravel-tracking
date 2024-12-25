@@ -61,7 +61,7 @@ class RequestTrackerController extends Controller
 
         $logs = $query->latest()->paginate(15)->withQueryString();
 
-        return view('request-logs::index', compact('logs'));
+        return view('request-tracker::index', compact('logs'));
     }
 
     public function destroy(TrackingLog $log)
