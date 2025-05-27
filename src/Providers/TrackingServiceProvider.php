@@ -3,6 +3,7 @@
 namespace MohsenMhm\LaravelTracking\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use MohsenMhm\LaravelTracking\Console\Commands\MigrateTrackingData;
 
 class TrackingServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,13 @@ class TrackingServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'request-tracker');
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+
+        // Register commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MigrateTrackingData::class,
+            ]);
+        }
 
         // Publish config
         $this->publishes([
