@@ -35,9 +35,6 @@ class MigrateTrackingData extends Command
                 $table->string('user_agent')->nullable();
                 $table->integer('response_status')->nullable();
                 $table->timestamps();
-
-                // Remove the foreign key constraint since users table is in different database
-                // $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             });
 
             $this->info('Table created successfully.');
@@ -97,6 +94,16 @@ class MigrateTrackingData extends Command
         $bar->finish();
         $this->newLine();
         $this->info("Migration completed. {$totalMigrated} records were migrated.");
+
+        // Reset the sequence in PostgreSQL
+        if (DB::connection($newConnection)->getDriverName() === 'pgsql') {
+            $maxId = DB::connection($newConnection)
+                ->table('request_logs')
+                ->max('id');
+            
+            DB::connection($newConnection)
+                ->statement("SELECT setval('request_logs_id_seq', {$maxId})");
+        }
 
         // Ask about cleanup
         if ($this->confirm('Do you want to keep the original table as backup?', true)) {
