@@ -21,7 +21,7 @@ customization.
 
 ### Laravel Version Support
 
-> **This package supports Laravel 9, 10, and 11.**
+> **This package supports Laravel 9 and above.**
 
 We ensure compatibility with the latest Laravel versions while maintaining support for older versions starting from Laravel 9. 
 
