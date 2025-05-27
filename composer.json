@@ -1,7 +1,7 @@
 {
     "name": "mohsen-mhm/laravel-tracking",
     "description": "A tracking package for Laravel applications",
-    "version": "2.1.8",
+    "version": "2.2.0",
     "type": "library",
     "require": {
         "php": "^8.0",
