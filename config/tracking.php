@@ -129,4 +129,15 @@ return [
         // '127.0.0.1',
         // '192.168.1.1',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Connection
+    |--------------------------------------------------------------------------
+    |
+    | Specify which database connection to use for storing tracking logs.
+    | If null, the default connection will be used.
+    |
+    */
+    'database_connection' => null,
 ];
