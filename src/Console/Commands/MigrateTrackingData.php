@@ -20,11 +20,26 @@ class MigrateTrackingData extends Command
             return 1;
         }
 
-        // Check if table exists in new connection
+        // Check if table exists in new connection, if not create it
         if (!Schema::connection($newConnection)->hasTable('request_logs')) {
-            $this->error('The request_logs table does not exist in the new database.');
-            $this->info('Run migrations first: php artisan migrate');
-            return 1;
+            $this->info('Creating request_logs table in the new database...');
+            
+            Schema::connection($newConnection)->create('request_logs', function ($table) {
+                $table->id();
+                $table->string('method');
+                $table->text('url');
+                $table->text('headers')->nullable();
+                $table->text('body')->nullable();
+                $table->unsignedBigInteger('user_id')->nullable();
+                $table->string('ip_address')->nullable();
+                $table->string('user_agent')->nullable();
+                $table->integer('response_status')->nullable();
+                $table->timestamps();
+
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            });
+
+            $this->info('Table created successfully.');
         }
 
         // Count records to migrate
