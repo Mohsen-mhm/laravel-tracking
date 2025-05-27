@@ -21,6 +21,22 @@ class TrackingLog extends Model
         'response_status',
     ];
 
+    /**
+     * Create a new instance of the model.
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        
+        // Set the connection based on config
+        if (config('tracking.database_connection')) {
+            $this->connection = config('tracking.database_connection');
+        }
+    }
+
     public function user(): ?BelongsTo
     {
         return $this->belongsTo(User::class);
