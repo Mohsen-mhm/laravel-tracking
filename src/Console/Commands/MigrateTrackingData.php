@@ -36,7 +36,8 @@ class MigrateTrackingData extends Command
                 $table->integer('response_status')->nullable();
                 $table->timestamps();
 
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+                // Remove the foreign key constraint since users table is in different database
+                // $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             });
 
             $this->info('Table created successfully.');
