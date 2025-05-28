@@ -5,6 +5,7 @@ namespace MohsenMhm\LaravelTracking\Http\Controllers;
 use Illuminate\Http\Request;
 use MohsenMhm\LaravelTracking\Models\TrackingLog;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 
 class RequestTrackerController extends Controller
@@ -18,8 +19,8 @@ class RequestTrackerController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('url', 'like', "%{$search}%")
-                ->orWhere('ip_address', 'like', "%{$search}%")
-                ->orWhere('user_agent', 'like', "%{$search}%");
+                    ->orWhere('ip_address', 'like', "%{$search}%")
+                    ->orWhere('user_agent', 'like', "%{$search}%");
             });
         }
 
@@ -46,35 +47,36 @@ class RequestTrackerController extends Controller
             $query->where('ip_address', 'like', "%{$request->ip}%");
         }
 
-        // User filter
+        // User filter (manually fetch matching user IDs)
         if ($request->filled('user')) {
             $searchTerm = strtolower($request->user);
-            
-            $query->where(function($q) use ($searchTerm) {
-                if ($searchTerm === 'guest') {
-                    $q->whereNull('user_id');
-                } else {
-                    $q->whereHas('user', function($subQ) use ($searchTerm) {
-                        // Get all searchable columns from users table
-                        $columns = Schema::getColumnListing('users');
-                        
-                        $subQ->where(function($innerQ) use ($columns, $searchTerm) {
-                            foreach ($columns as $column) {
-                                // Skip non-searchable columns
-                                if (in_array($column, ['password', 'remember_token', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at'])) {
-                                    continue;
-                                }
-                                
-                                // Cast column to string for searching
-                                $innerQ->orWhereRaw("LOWER(CAST({$column} AS TEXT)) LIKE ?", ["%{$searchTerm}%"]);
+
+            if ($searchTerm === 'guest') {
+                $query->whereNull('user_id');
+            } else {
+                $columns = Schema::getColumnListing('users');
+
+                $users = User::on('mysql')
+                    ->where(function ($q) use ($columns, $searchTerm) {
+                        foreach ($columns as $column) {
+                            if (in_array($column, ['password', 'remember_token', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at'])) {
+                                continue;
                             }
-                        });
-                    });
-                }
-            });
+
+                            $q->orWhereRaw("LOWER(CAST({$column} AS TEXT)) LIKE ?", ["%{$searchTerm}%"]);
+                        }
+                    })->pluck('id');
+
+                $query->whereIn('user_id', $users);
+            }
         }
 
         $logs = $query->latest()->paginate(15)->withQueryString();
+
+        // Attach user info from separate DB
+        foreach ($logs as $log) {
+            $log->user = $log->resolvedUser();
+        }
 
         return view('request-tracker::index', compact('logs'));
     }
