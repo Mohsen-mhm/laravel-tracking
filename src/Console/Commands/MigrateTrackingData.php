@@ -76,6 +76,9 @@ class MigrateTrackingData extends Command
 
             $dataToInsert = [];
             foreach ($records as $record) {
+                if (DB::connection($newConnection)->table('request_logs')->find($record->id)) {
+                    continue;
+                }
                 $dataToInsert[] = (array)$record;
             }
 
