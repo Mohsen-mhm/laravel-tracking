@@ -61,7 +61,6 @@ class MigrateTrackingData extends Command
         $totalMigrated = 0;
 
         while (true) {
-            // Use keyset pagination for better performance with large datasets
             $records = DB::table('request_logs')
                 ->where('id', '>', $lastId)
                 ->orderBy('id')
@@ -73,25 +72,39 @@ class MigrateTrackingData extends Command
             }
 
             $lastId = $records->last()->id;
+            $recordIds = $records->pluck('id')->toArray();
+
+            // Get existing IDs in one query
+            $existingIds = DB::connection($newConnection)
+                ->table('request_logs')
+                ->whereIn('id', $recordIds)
+                ->pluck('id')
+                ->toArray();
 
             $dataToInsert = [];
+            $skipped = 0;
             foreach ($records as $record) {
-                if (DB::connection($newConnection)->table('request_logs')->find($record->id)) {
+                if (in_array($record->id, $existingIds)) {
+                    $skipped++;
                     continue;
                 }
                 $dataToInsert[] = (array)$record;
             }
 
-            // Insert into new database
-            DB::connection($newConnection)
-                ->table('request_logs')
-                ->insert($dataToInsert);
+            if (!empty($dataToInsert)) {
+                DB::connection($newConnection)
+                    ->table('request_logs')
+                    ->insert($dataToInsert);
+            }
 
-            $totalMigrated += count($records);
+            $totalMigrated += count($dataToInsert);
+            if ($skipped > 0) {
+                $this->info(" Skipped {$skipped} existing records");
+            }
             $bar->advance(count($records));
 
             // Free memory
-            unset($records, $dataToInsert);
+            unset($records, $dataToInsert, $existingIds);
         }
 
         $bar->finish();
