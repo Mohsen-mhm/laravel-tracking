@@ -5,6 +5,7 @@ namespace MohsenMhm\LaravelTracking\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Schema;
 
 class TrackingLog extends Model
 {
@@ -37,8 +38,8 @@ class TrackingLog extends Model
         }
     }
 
-    public function user(): ?BelongsTo
+    public function resolvedUser()
     {
-        return $this->belongsTo(User::class);
+        return User::on(config('database.default'))->find($this->user_id);
     }
 }
