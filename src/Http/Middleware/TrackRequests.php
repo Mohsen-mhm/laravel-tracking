@@ -4,6 +4,7 @@ namespace MohsenMhm\LaravelTracking\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use MohsenMhm\LaravelTracking\Models\TrackingLog;
 use MohsenMhm\LaravelTracking\Services\IpResolverService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -48,7 +49,7 @@ class TrackRequests
             'url' => $request->fullUrl(),
             'user_id' => config('tracking.log_user') ? Auth::id() : null,
             'ip_address' => config('tracking.log_ip') ? $currentIp : null,
-            'user_agent' => config('tracking.log_user_agent') ? $request->header('User-Agent') : null,
+            'user_agent' => config('tracking.log_user_agent') ? Str::limit($request->header('User-Agent'), 250) : null,
             'response_status' => $status,
         ];
 
