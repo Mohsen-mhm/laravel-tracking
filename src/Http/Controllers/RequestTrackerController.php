@@ -66,7 +66,6 @@ class RequestTrackerController extends Controller
                             $q->orWhereRaw("LOWER(CAST({$column} AS TEXT)) LIKE ?", ["%{$searchTerm}%"]);
                         }
                     })->pluck('id');
-
                 $query->whereIn('user_id', $users);
             }
         }
