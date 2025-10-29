@@ -56,8 +56,7 @@ class RequestTrackerController extends Controller
             } else {
                 $columns = Schema::getColumnListing('users');
 
-                $users = User::on(config('tracking.database_connection'))
-                    ->where(function ($q) use ($columns, $searchTerm) {
+                $users = User::query()->where(function ($q) use ($columns, $searchTerm) {
                         foreach ($columns as $column) {
                             if (in_array($column, ['password', 'remember_token', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at'])) {
                                 continue;
